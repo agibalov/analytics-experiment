@@ -1,22 +1,5 @@
 apply plugin: 'java'
-apply plugin: 'application'
 apply plugin: 'groovy'
-
-run {
-    main = 'me.loki2302.App'
-    systemProperties = [
-            /*
-            these should either be replaced with username and password constants,
-            or specified in user's .gradle/gradle.properties:
-            gitHubUsername=githubuser
-            gitHubPassword=git!hub!secret!pa$$w0rd
-
-            TODO: replace with GitHub API token
-             */
-            'gitHubUsername': gitHubUsername,
-            'gitHubPassword': gitHubPassword
-    ]
-}
 
 sourceCompatibility = 1.5
 version = '1.0'
@@ -32,4 +15,26 @@ dependencies {
     compile "com.fasterxml.jackson.core:jackson-databind:2.4.0"
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.0"
     compile 'org.hsqldb:hsqldb:2.3.2'
+}
+
+task runImport(type: JavaExec) {
+    main = 'me.loki2302.ImportApp'
+    classpath = sourceSets.main.runtimeClasspath
+    systemProperties = [
+            /*
+            these should either be replaced with username and password constants,
+            or specified in user's .gradle/gradle.properties:
+            gitHubUsername=githubuser
+            gitHubPassword=git!hub!secret!pa$$w0rd
+
+            TODO: replace with GitHub API token
+             */
+            'gitHubUsername': gitHubUsername,
+            'gitHubPassword': gitHubPassword
+    ]
+}
+
+task runAnalytics(type: JavaExec, dependsOn: 'compileJava') {
+    main = 'me.loki2302.AnalyticsApp'
+    classpath = sourceSets.main.runtimeClasspath
 }
