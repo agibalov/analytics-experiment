@@ -1,6 +1,7 @@
 package me.loki2302
 
 import groovy.sql.Sql
+import me.loki2302.reports.LastCommitsByRepositoryReport
 import me.loki2302.reports.RepositoriesWithFirstAndLastCommitDatesReport
 import me.loki2302.reports.TopRepositoriesByCommitCountReport
 
@@ -30,16 +31,17 @@ class AnalyticsApp {
             "${it.name} - ${it.firstCommitDate} - ${it.lastCommitDate}"
         }.join('\n'))
 
+        // TODO: get last 3 commits for each repository (master -> details)
+        def lastCommitsByRepositoryReport = new LastCommitsByRepositoryReport()
+        def repositories = lastCommitsByRepositoryReport.make(sql, 3)
+        println repositories.take(3).collect { repository ->
+            "${repository.name}\n" + repository.commits.collect { commit ->
+                "  $commit.date $commit.sha"
+            }.join('\n')
+        }.join('\n')
+
         // TODO: list top 3 repositories with earliest firstCommitDate
         // TODO: list top 3 repositories with latest lastCommitDate
         // TODO: list top 3 repositories which have largest difference between firstCommitDate and lastCommitDate, specify first+last+difference
-        // TODO: get last 3 commits for each repository (master -> details)
-
-        /*println sql.rows('''
-select top 3
-    R.name as name,
-    (select min(C.date) from Commits as C where C.repositoryId = R.id) as firstCommitDate
-from Repositories as R
-order by firstCommitDate asc''').join('\n')*/
     }
 }
