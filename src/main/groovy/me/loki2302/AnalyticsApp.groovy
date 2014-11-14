@@ -43,6 +43,12 @@ class AnalyticsApp {
 
         //
         def commitCountByTimePeriodReport = new CommitCountByTimePeriodReport()
+        rows = commitCountByTimePeriodReport.makeCommitCountByYearMonthAndDay(sql)
+        println()
+        println rows.collect {
+            "${it.timePeriod} - ${it.commitCount}"
+        }.join('\n')
+
         rows = commitCountByTimePeriodReport.makeCommitCountByYearAndMonth(sql)
         println()
         println rows.collect {

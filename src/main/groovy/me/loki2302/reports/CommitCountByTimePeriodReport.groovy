@@ -37,8 +37,19 @@ order by yearAndMonthString desc
     }
 
     List<Row> makeCommitCountByYearMonthAndDay(Sql sql) {
-        // TODO
-        throw new RuntimeException("Not implemented")
+        sql.rows('''
+select
+    to_char(C.date, 'YYYY-MM-DD') as yearMonthAndDayString,
+    count(C.id) as commitCount
+from Commits as C
+group by yearMonthAndDayString
+order by yearMonthAndDayString desc
+''').collect {
+            Row.builder()
+                    .timePeriod(it.yearMonthAndDayString)
+                    .commitCount(it.commitCount)
+                    .build()
+        }
     }
 
     @Builder
