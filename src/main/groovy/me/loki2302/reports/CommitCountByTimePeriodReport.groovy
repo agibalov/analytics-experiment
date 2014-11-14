@@ -5,8 +5,19 @@ import groovy.transform.builder.Builder
 
 class CommitCountByTimePeriodReport {
     List<Row> makeCommitCountByYear(Sql sql) {
-        // TODO
-        throw new RuntimeException("Not implemented")
+        sql.rows('''
+select
+    to_char(C.date, 'YYYY') as yearString,
+    count(C.id) as commitCount
+from Commits as C
+group by yearString
+order by yearString desc
+''').collect {
+            Row.builder()
+                    .timePeriod(it.yearString)
+                    .commitCount(it.commitCount)
+                    .build()
+        }
     }
 
     List<Row> makeCommitCountByYearAndMonth(Sql sql) {
@@ -15,8 +26,8 @@ select
     to_char(C.date, 'YYYY-MM') as yearAndMonthString,
     count(C.id) as commitCount
 from Commits as C
-group by YearAndMonthString
-order by YearAndMonthString desc
+group by yearAndMonthString
+order by yearAndMonthString desc
 ''').collect {
             Row.builder()
                     .timePeriod(it.yearAndMonthString)
