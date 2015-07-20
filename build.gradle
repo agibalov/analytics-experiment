@@ -10,11 +10,11 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    compile 'org.codehaus.groovy:groovy-all:2.3.7'
+    compile 'org.codehaus.groovy:groovy-all:2.4.4'
     compile 'org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5'
-    compile "com.fasterxml.jackson.core:jackson-databind:2.4.0"
-    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.0"
-    compile 'org.hsqldb:hsqldb:2.3.2'
+    compile "com.fasterxml.jackson.core:jackson-databind:2.6.0"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.6.0-rc4"
+    compile 'org.hsqldb:hsqldb:2.3.3'
 }
 
 task runImport(type: JavaExec) {
@@ -37,4 +37,8 @@ task runImport(type: JavaExec) {
 task runAnalytics(type: JavaExec, dependsOn: 'compileJava') {
     main = 'me.loki2302.AnalyticsApp'
     classpath = sourceSets.main.runtimeClasspath
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
 }
